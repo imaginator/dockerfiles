@@ -1,8 +1,9 @@
 FROM aostanin/debian
 
-RUN apt-get install -qy gdebi-core
+RUN apt-get update
+RUN apt-get install -qy gdebi-core adduser
 
-ADD http://downloads.plexapp.com/plex-media-server/0.9.9.14.531-7eef8c6/plexmediaserver_0.9.9.14.531-7eef8c6_amd64.deb /tmp/plexmediaserver.deb
+ADD https://downloads.plex.tv/plex-media-server/0.9.11.16.958-80f1748/plexmediaserver_0.9.11.16.958-80f1748_amd64.deb /tmp/plexmediaserver.deb
 RUN gdebi -qn /tmp/plexmediaserver.deb && rm /tmp/plexmediaserver.deb
 
 ADD start.sh /start.sh
