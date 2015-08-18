@@ -43,21 +43,35 @@ The following starts the plexmediaserver container with:
 - Bridged networking using the `br0` bridge with an IP address of `192.168.0.10` and gateway of `192.168.0.1`
 
 ```
-docker run -d -n=false \
-  -v /srv/media/videos:/videos \
-  -v /srv/media/music:/music \
-  -v /tank/virt/data/plexmediaserver:/data \
-  -lxc-conf="lxc.network.type = veth" \
-  -lxc-conf="lxc.network.flags = up" \
-  -lxc-conf="lxc.network.link = br0" \
-  -lxc-conf="lxc.network.ipv4 = 192.168.1.10" \
-  -lxc-conf="lxc.network.ipv4.gateway=192.168.1.1" \
-  plexmediaserver
+/usr/bin/docker run \
+  -v /var/lib/plexmediaserver-docker:/config:rw  \
+  -v /srv/video/Film:/Film:ro \
+  -v /srv/video/Clips:/Clips:ro \
+  -v /srv/video/TV:/TV:ro  \
+  -v /srv/music/Music:/Music:ro \
+  -v /home/username/photos/:/Photos:ro \
+  --net="none" \
+  --lxc-conf="lxc.network.type = veth"  \
+  --lxc-conf="lxc.network.flags = up"  \
+  --lxc-conf="lxc.network.link = br0" \
+  --lxc-conf="lxc.network.hwaddr=00:16:3e:13:48:42" \
+  --lxc-conf="lxc.network.ipv4 = 192.168.0.10/24" \
+  --lxc-conf="lxc.network.ipv4.gateway = 192.168.0.1" \
+  --lxc-conf="lxc.network.flags = up" \
+  "plexmediaserver"
+```
+
+#### Server-side setup
+
+```
+mkdir /var/lib/plexmediaserver-docker
+chown -R plex /var/lib/plexmediaserver-docker
+cp dockerfiles/servers/plexmediaserver/plexmediaserver-docker.conf /etc/init/
+initctl reload
+start plexmediaserver-docker
 ```
 
 for nice presentation in Apache eg `plex.your-domain.com` add the `plex.imaginator.com.conf` file to your `/etc/apache2/site-avaliable/` and run `a2ensite`
-
-to ensure the server runs when Ubuntu boots, add `plex-mediaserver-docker.conf` to `/etc/init/`
 
 #### GUI Setup
 
