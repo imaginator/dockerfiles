@@ -10,7 +10,6 @@ This is a Dockerfile to set up [Plex Media Server](http://www.plexapp.com/).
 
 Build the image with `docker build -t plexmediaserver .` in this directory.
 
-
 ### Running
 
 Plex depends on Avahi and it's own GDM network discovery protocol to work so while there may be ways around this, the easiest way is probably to run the container on the same subnet as your LAN.
